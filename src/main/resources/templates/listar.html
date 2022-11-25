@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmls:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="layaut/layaut::head"></head>
+
+<body>
+	<header th:replace="layaut/layaut::header"></header>
+
+	<div class="container mx-auto p-3">
+
+		<div class="card bg-ligh">
+			<div class="card-header">
+				<h3 class="border-primary" th:text="${titulo}"></h3>
+			</div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/form}">Crear Cliente</a>
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<th sec:authorize="hasRole('USER')" >ID</th>
+						<th th:text="#{text.cliente.nombre}">Nombre</th>
+						<th th:text="#{text.cliente.apellido}">Apellido</th>
+						<th th:text="#{text.cliente.email}">Email</th>
+						<th th:text="#{text.cliente.fecha}">Fecha de alta</th>
+						<th sec:authorize="hasRole('ADMIN')" >Crear Factura</th>
+						<th sec:authorize="hasRole('ADMIN')" >Editar</th>
+						<th sec:authorize="hasRole('ADMIN')" >Eliminar</th>
+					</thead>
+					<tbody>
+						<tr th:each=" cliente : ${clientes}">
+							<td sec:authorize="hasRole('USER')"  >
+								<a class="btn btn-primary btn-xs" th:href="@{/ver/}+${cliente.id}" th:text="${cliente.id}"></a>
+							</td>
+							<td th:text="${cliente.nombre}"></td>
+							<td th:text="${cliente.apellido}"></td>
+							<td th:text="${cliente.email}"></td>
+							<td th:text="${cliente.createAt}"></td>
+							<td>
+								<a sec:authorize="hasRole('ADMIN')"  class="btn btn-success btn-xs" th:href="@{/factura/form/} + ${cliente.id}">Crear Factura</a>
+							</td>
+							<td> <a sec:authorize="hasRole('ADMIN')"  class="btn btn-warning btn-xs" th:href="@{/form/} + ${cliente.id}">Editar</a>
+								 
+							</td>
+							<td>
+								<a sec:authorize="hasRole('ADMIN')"  class="btn btn-danger btn-xs" th:href="@{/eliminar/} + ${cliente.id}"
+									onclick="  confirm('Esta seguro que desa eliminar al cliente');">Eliminar</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<nav th:replace="layaut/paginator::paginator"></nav>
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="layaut/layaut::footer"></footer>
+</body>
+
+</html>

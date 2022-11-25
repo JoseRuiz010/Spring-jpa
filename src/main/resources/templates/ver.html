@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmls:th="http://www.thymeleaf.org">
+
+<head th:replace="layaut/layaut::head"></head>
+
+<body>
+	<header th:replace="layaut/layaut::header"></header>
+
+	<div class="container  p-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+
+			<div class="card-body ">
+		     	<a sec:authorize="hasRole('ADMIN')"  class="btn btn-success btn-xs my-2" th:href="@{/factura/form/} + ${cliente.id}">Crear Factura</a>
+				<img th:if="${#strings.length(cliente.foto)>0}" class="img-thumbnail rounded float-left"
+					style="max-width:25% ;" th:src="@{'/upload/'+ ${cliente.foto}}" th:alt="${cliente.foto}" />
+
+				<ul class="list-group">
+					<li class="list-group-item" th:text="${cliente.nombre}"></li>
+					<li class="list-group-item" th:text="${cliente.apellido}"></li>
+					<li class="list-group-item" th:text="${cliente.email}"></li>
+					<li class="list-group-item" th:text="${cliente.createAt}"></li>
+				</ul>
+				<div th:if="${#lists.isEmpty(cliente.facturas)}" class="alert alert-info mt-4"
+					th:text="'No hay facturas asignadas al cliente '+${cliente.apellido}"></div>
+				<table th:if="${not #lists.isEmpty(cliente.facturas)}" class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Folio</th>
+							<th>Descripcion</th>
+							<th>Fecha</th>
+							<th>Total</th>
+							<th sec:authorize="hasRole('ADMIN')" >Ver</th>
+							<th sec:authorize="hasRole('ADMIN')" >Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="factura: ${cliente.facturas}">
+							<th th:text="${factura.id}">Folio</th>
+							<th th:text="${factura.descripcion}">Descripcion</th>
+							<th th:text="${factura.createAt}">Fecha</th>
+							<th th:text="${factura.total}">Total</th>
+							<th sec:authorize="hasRole('ADMIN')"  ><a  class="btn btn-primary" th:href="@{'/factura/ver/'+ ${factura.id}}">Detalle</a> </th>
+						<th sec:authorize="hasRole('ADMIN')"  ><a  class="btn btn-danger" th:href="@{'/factura/eliminar/'+ ${factura.id}}">Delete</a> </th>
+						
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="layaut/layaut::footer"></footer>
+</body>
+
+</html>
